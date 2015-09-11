@@ -2,7 +2,9 @@ package com.mx.awsapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.amazonaws.services.s3.model.S3Object;
 import com.mx.awsapi.dao.S3ObjectDao;
+ 
 
 public class S3ObjectService {
 
@@ -18,6 +20,7 @@ public class S3ObjectService {
 	}
 
 	public void uploadVideoObject(){
+		S3Object sobj= new S3Object();
 		System.out.println("Uploading object");
 
 

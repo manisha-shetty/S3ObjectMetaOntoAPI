@@ -38,7 +38,51 @@
 	</dependencies>
 	<build>
 		<finalName>S3ObjectMetaOntoAPI</finalName>
+		<pluginManagement>
+			<plugins>
+				<!-- Ignore/Execute plugin execution -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- copy-dependency plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
+		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+				  <archive>
+				    <manifest>
+					<addClasspath>true</addClasspath>
+					<classpathPrefix>dependency-jars/</classpathPrefix>
+				    </manifest>
+				  </archive>
+				</configuration>
+			</plugin>
+		
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.5.1</version>
@@ -58,5 +102,6 @@
 				</executions>
 			</plugin>
 		</plugins>
+		
 	</build>
 </project>
