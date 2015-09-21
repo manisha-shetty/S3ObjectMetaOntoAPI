@@ -1,0 +1,5 @@
+#surefire
+#Thu Sep 10 00:51:24 IST 2015
+user.dir=/home/manisha/ManishaWorkspace/S3ObjectMetaOntoAPI
+localRepository=/home/manisha/.m2/repository
+basedir=/home/manisha/ManishaWorkspace/S3ObjectMetaOntoAPI

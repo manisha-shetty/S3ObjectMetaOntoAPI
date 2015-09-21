@@ -3,18 +3,31 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	xmlns:context="http://www.springframework.org/schema/context">
 
-<context: component-scan base-package="com.mx.awsapi"/>
-
-<bean id="s3ObjectService" class="com.mx.awsapi.dao.S3ObjectService" scope="singleton">
-</bean>
-<bean id="ontologyService" class="com.mx.awsapi.dao.OntologyService" scope="singleton">
-</bean>
+	<context:component-scan base-package="com.mx.awsapi" />
 
 
-<bean id="s3ObjectDao" class="com.mx.awsapi.dao.S3ObjectDao" scope="singleton">
-</bean>
-<bean id="ontologyDao" class="com.mx.awsapi.dao.OntologyDao" scope="singleton">
-</bean>
+
+	<bean id="test" class="com.mx.awsapi.Test"></bean>
+
+	<bean id="s3ObjectService" class="com.mx.awsapi.service.S3ObjectService"
+		scope="singleton">
+	</bean>
+	<bean id="ontologyService" class="com.mx.awsapi.service.OntologyService"
+		scope="singleton">
+		<property name="model" value="/home/manisha/ManishaOntologies/S3ObjectMetaOnto/S3ObjectMetaOnto.owl">
+		</property>
+	</bean>
+
+
+	<bean id="s3ObjectDao" class="com.mx.awsapi.dao.S3ObjectDao"
+		scope="singleton">
+	</bean>
+	<bean id="ontologyDao" class="com.mx.awsapi.dao.OntologyDao"
+		scope="singleton">
+	</bean>
 </beans>
