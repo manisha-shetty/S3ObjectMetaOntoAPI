@@ -35,17 +35,17 @@ public class Test {
 		    	S3ObjectService s3ObjectService = (S3ObjectService) context.getBean("s3ObjectService");
 		    	
 		    	
-		    	AWSCredentials awsCredentials = new BasicAWSCredentials("access","sec");
+		    	AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAJ72TVOKQPPUQDSNA","lYTpy5tExrKG7MFBRU3XFJROrhLO7PFu4OUJfFEZ");
 				AmazonS3Client s3Client = new AmazonS3Client(awsCredentials);
 			
 				String bucketName="test-bucket-manisha";
 		    VideoObjectMetadata vom=new VideoObjectMetadata();
 		    vom.setFormat("mp4");
 		    vom.setLengthInSeconds(120);
-		    vom.setKeyName("Silicon.Valley.S01E01.HDTV.x264-KILLERS.mp4");
-		    vom.setObjectFilePath("/home/manisha/Downloads/Capture.JPG");
+		    vom.setKeyName("Silicon.Valley.S01E01");
+		    vom.setObjectFilePath("/home/manisha/Downloads/Silicon.Valley.S01E01.HDTV.x264-KILLERS.mp4");
 		    vom.setLanguage("English");
-		    vom.setCaption("Silicon.Valley.S01E01.HDTV.x264-KILLERS");
+		    vom.setCaption("Test1");
 		    vom.setCacheControl("");
 		    vom.setContentDisposition("");
 		    vom.setContentEncoding("");

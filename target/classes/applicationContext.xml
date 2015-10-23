@@ -19,7 +19,11 @@
 	</bean>
 	<bean id="ontologyService" class="com.mx.awsapi.service.OntologyService"
 		scope="singleton">
-		<property name="model" value="/home/manisha/ManishaOntologies/S3ObjectMetaOnto/S3ObjectMetaOnto.owl">
+		<property name="model"
+			value="/home/manisha/ManishaOntologies/S3ObjectMetaOnto/S3ObjectMetaOnto.owl">
+		</property>
+		<property name="ns"
+			value="http://www.semanticweb.org/ontologies/2015/9/S3ObjectMetaOnto.owl#">
 		</property>
 	</bean>
 
