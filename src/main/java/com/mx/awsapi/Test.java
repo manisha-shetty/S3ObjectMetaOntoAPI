@@ -35,7 +35,7 @@ public class Test {
 		    	S3ObjectService s3ObjectService = (S3ObjectService) context.getBean("s3ObjectService");
 		    	
 		    	
-		    	AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAJ72TVOKQPPUQDSNA","lYTpy5tExrKG7MFBRU3XFJROrhLO7PFu4OUJfFEZ");
+		    	AWSCredentials awsCredentials = new BasicAWSCredentials("","");
 				AmazonS3Client s3Client = new AmazonS3Client(awsCredentials);
 			
 				String bucketName="test-bucket-manisha";
