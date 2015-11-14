@@ -34,64 +34,23 @@ public class Test {
 		    	  new ClassPathXmlApplicationContext("applicationContext.xml");		    	
 		    	S3ObjectService s3ObjectService = (S3ObjectService) context.getBean("s3ObjectService");
 		    	
-		    	
 		    	AWSCredentials awsCredentials = new BasicAWSCredentials("","");
 				AmazonS3Client s3Client = new AmazonS3Client(awsCredentials);
-			
-				String bucketName="test-bucket-manisha";
+
 		    VideoObjectMetadata vom=new VideoObjectMetadata();
-		    vom.setFormat("mp4");
+		    vom.setFormat("JPG");
 		    vom.setLengthInSeconds(120);
-		    vom.setKeyName("Silicon.Valley.S01E01");
-		    vom.setObjectFilePath("/home/manisha/Downloads/Silicon.Valley.S01E01.HDTV.x264-KILLERS.mp4");
+		    vom.setKeyName("Capture.JPG");
+		    vom.setBucketName("test-bucket-manisha");
+		    vom.setObjectFilePath("/home/manisha/Downloads/Capture.JPG");
 		    vom.setLanguage("English");
-		    vom.setCaption("Test1");
-		    vom.setCacheControl("");
-		    vom.setContentDisposition("");
-		    vom.setContentEncoding("");
+		    vom.setCaption("Capture");
 		    vom.setContentLength(0);
-		    vom.setContentMD5("");
-		    vom.setExpirationTime(new Date());
-		    vom.setExpirationTimeRuleId("");
-		    s3ObjectService.uploadVideoObject(vom, s3Client, bucketName);
+		    vom.setContentType("image/jpeg");
+		    s3ObjectService.uploadVideoObject(vom, s3Client);
+
+		   //s3ObjectService.searchVideoByLanguage("English",s3Client);
 		    
-		    
-//		try{
-//		String pathName="/home/manisha/ManishaOntologies/S3ObjectMetaOnto/S3ObjectMetaOnto.owl";
-//		File owlFile=new File(pathName);
-//		FileReader owlFileReader=new FileReader(owlFile);
-//		OntModel model=ModelFactory.createOntologyModel();
-//		model.read(owlFileReader, null);
-//		Iterator classIter=model.listClasses();
-//		while(classIter.hasNext()){
-//			OntClass ontClass=(OntClass)classIter.next();
-//			System.out.println(ontClass.getURI());
-//		}
-		
-	
-//		
-		
-		//s3Client.createBucket(bucketName);
-		
-//		
-//	    for (Bucket bucket : s3Client.listBuckets()) {
-//	    	System.out.println(" - " + bucket.getName());
-//	    }
-//	    
-		
-		
-    
-//	    
-//	    
-//		}catch(Exception e){
-//			
-//			System.out.println("message:"+e);
-//		}	
-//			
-		
-		
-		
-		
 		}
 	
 

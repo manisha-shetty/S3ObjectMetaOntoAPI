@@ -19,7 +19,7 @@
 	</bean>
 	<bean id="ontologyService" class="com.mx.awsapi.service.OntologyService"
 		scope="singleton">
-		<property name="model"
+		<property name="owlFilePath"
 			value="/home/manisha/ManishaOntologies/S3ObjectMetaOnto/S3ObjectMetaOnto.owl">
 		</property>
 		<property name="ns"

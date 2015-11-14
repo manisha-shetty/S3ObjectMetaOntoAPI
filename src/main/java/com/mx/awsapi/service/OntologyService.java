@@ -4,18 +4,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.ontology.OntResource;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.mx.awsapi.dao.OntologyDao;
 import com.mx.awsapi.model.S3CustomObjectMetadata;
 import com.mx.awsapi.model.VideoObjectMetadata;
@@ -26,6 +34,8 @@ public class OntologyService {
 
 	@Autowired
 	private OntologyDao ontologyDao;
+
+	private String owlFilePath;
 
 	private OntModel model;
 
@@ -45,13 +55,20 @@ public class OntologyService {
 		return model;
 	}
 
-	public void setModel(String owlFilePath) {
+	
+	public String getOwlFilePath() {
+		return owlFilePath;
+	}
+
+	public void setOwlFilePath(String owlFilePath) {
+		this.owlFilePath=owlFilePath;
 		File owlFile=new File(owlFilePath);
 		try {
 			FileReader owlFileReader = new FileReader(owlFile);
 			model=ModelFactory.createOntologyModel();
 			model.read(owlFileReader, null);
-			stream= new PrintStream(owlFilePath);
+
+
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -75,7 +92,7 @@ public class OntologyService {
 		this.stream = stream;
 	}
 
-	public Individual addSystemMetadataToIndividual(S3CustomObjectMetadata com, Individual ind){
+	public Individual addS3ObjectMetadata(S3CustomObjectMetadata com, Individual ind){
 
 		ind.addProperty(model.getProperty(getNs()+"cache_control"),(com.getCacheControl()==null)?"":com.getCacheControl());
 		ind.addProperty(model.getProperty(getNs()+"content_disposition"),(com.getContentDisposition()==null)?"":com.getContentDisposition());
@@ -95,28 +112,65 @@ public class OntologyService {
 		return ind;
 
 	}
-	public void createVOMIndividual(VideoObjectMetadata vom){
 
+	public Individual addS3CustomObjectMetadata(S3CustomObjectMetadata com, Individual ind){
 
+		ind.addProperty(model.getProperty(getNs()+"key_name"),(com.getKeyName()==null)?"":com.getKeyName());
+		ind.addProperty(model.getProperty(getNs()+"bucket_name"),(com.getBucketName()==null)?"":com.getBucketName());
+		ind.addProperty(model.getProperty(getNs()+"object_file_path"),(com.getObjectFilePath()==null)?"":com.getObjectFilePath());
+		ind.addLiteral(model.getProperty(getNs()+"size_in_kb"),com.getSizeInKB());
+		return ind;
+	}
+	
+	public void createVideoIndividual(VideoObjectMetadata vom){
 		System.out.println("OntologyService - Creating VideoObjectMetadata Individual for "+ vom.getKeyName());
-		//	model.createClass(getNs()+"AudioObjectMetadata");
-		//model.createIndividual(getNs()+"VOM_"+vom.getKeyName(), vomClass);
-
-		/*for (  ExtendedIterator<? extends OntResource> vomInds = vomClass.listInstances(); vomInds.hasNext();) {
-			System.out.println( vomInds.next() ); 	 
-
-		}*/
-
 		OntClass vomClass= model.getOntClass(getNs()+"VideoObjectMetadata");
 		Individual vomInd=vomClass.createIndividual(getNs()+"VOM_"+vom.getKeyName());
 		//set User metadata
-		vomInd=addSystemMetadataToIndividual(vom, vomInd);
+		vomInd=addS3ObjectMetadata(vom, vomInd);
+		vomInd=addS3CustomObjectMetadata(vom, vomInd);
+
 		vomInd.addProperty(model.getProperty(getNs()+"format"),vom.getFormat());
 		vomInd.addProperty(model.getProperty(getNs()+"caption"),vom.getCaption());
 		vomInd.addProperty(model.getProperty(getNs()+"language"),vom.getLanguage());
 		vomInd.addLiteral(model.getProperty(getNs()+"length_in_seconds"),vom.getLengthInSeconds());
+		try {
+			stream= new PrintStream(getOwlFilePath());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		model.write(getStream(), "RDF/XML",null);
 
+	}
+
+	public List<Map<String,String>> searchVideoByLanguage(String language){
+
+		List<Map<String,String>> mapList = new ArrayList<Map<String,String>>();
+		String queryString =
+				"prefix ns: <"+getNs() +">" +
+						"prefix vom: <"+getNs() +"VideoObjectMetadata> " +       
+						"prefix rdfs: <" + RDFS.getURI() + "> "           +
+						"prefix owl: <" + OWL.getURI() + "> "             +
+						"select ?key ?bucket where {?i a ns:VideoObjectMetadata ." +
+						"?i ns:key_name ?key ." +
+						"?i ns:bucket_name ?bucket" +
+						"?i ns:language '"+ language +"'}";
+
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qe = QueryExecutionFactory.create(query, getModel());
+		com.hp.hpl.jena.query.ResultSet results =  qe.execSelect();
+		while(results.hasNext()){
+			QuerySolution qs=results.next();
+			Map<String,String> map=new HashMap<String,String>();
+			//System.out.println(qs.getLiteral("key") +" "+qs.getLiteral("bucket"));
+			map.put("keyName",qs.getLiteral("key").toString());
+			map.put("bucketName",qs.getLiteral("bucket").toString());
+			mapList.add(map);
+		}
+		//ResultSetFormatter.out(System.out, results, query);
+		qe.close();
+		return mapList;
 	}
 
 }
