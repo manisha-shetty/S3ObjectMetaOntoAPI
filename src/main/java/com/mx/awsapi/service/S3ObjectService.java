@@ -4,10 +4,12 @@ package com.mx.awsapi.service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -106,7 +108,9 @@ public class S3ObjectService {
 			} catch (IOException e) {
 				System.err.printf("Failed while reading bytes from %s", e.getMessage());
 			} 
-		}
+		};
+
+
 		ontologyService.createVideoIndividual(vom);
 		System.out.println("S3ObjectService - Creating S3 Object Metadata for "+ vom.getKeyName());
 		ObjectMetadata objectMetadata=new ObjectMetadata();
@@ -114,10 +118,17 @@ public class S3ObjectService {
 		objectMetadata=setS3CustomObjectMetadataForUpload(vom, objectMetadata);
 
 		objectMetadata.addUserMetadata("format", vom.getFormat());
-		objectMetadata.addUserMetadata("caption", vom.getCaption());
+		objectMetadata.addUserMetadata("title", vom.getTitle());
 		objectMetadata.addUserMetadata("language", vom.getLanguage());
-		objectMetadata.addUserMetadata("lengthInSeconds", String.valueOf(vom.getLengthInSeconds()));
+		objectMetadata.addUserMetadata("durationInSeconds", String.valueOf(vom.getDurationInSeconds()));
+		objectMetadata.addUserMetadata("creator", vom.getCreator());
+		objectMetadata.addUserMetadata("dateOfCreation", vom.getDateOfCreation().toString());
+		objectMetadata.addUserMetadata("subject", vom.getSubject());
+		objectMetadata.addUserMetadata("description", vom.getDescription());
+
 		s3ObjectDao.uploadObject(objectMetadata,vom,s3Client);
+
+
 	}
 
 	public List<VideoObjectMetadata> searchVideoByLanguage(String language, AmazonS3Client s3Client){
@@ -125,19 +136,21 @@ public class S3ObjectService {
 		List<VideoObjectMetadata> vomList= new ArrayList<VideoObjectMetadata>();
 		List<Map<String,String>> mapList=ontologyService.searchVideoByLanguage(language); 
 		//mapList has keyname-bucketname pairs
-		List<ObjectMetadata> list=s3ObjectDao.getObjectListByKeyNames(mapList,s3Client);
+		/*List<ObjectMetadata> list=s3ObjectDao.getObjectListByKeyNames(mapList,s3Client);
 		while(!list.isEmpty()){
 			VideoObjectMetadata vom=new VideoObjectMetadata();
 			ObjectMetadata objectMetadata=list.remove(0);
 			vom=(VideoObjectMetadata)setS3ObjectMetadataAfterDownload(vom, objectMetadata);
 			vom=(VideoObjectMetadata)setS3CustomObjectMetadataAfterDownload(vom, objectMetadata);
 			vom.setFormat(objectMetadata.getUserMetaDataOf("format"));
-			vom.setFormat(objectMetadata.getUserMetaDataOf("caption"));
-			vom.setFormat(objectMetadata.getUserMetaDataOf("language"));
-			vom.setFormat(objectMetadata.getUserMetaDataOf("lengthInSeconds"));
+			vom.setTitle(objectMetadata.getUserMetaDataOf("title"));
+			vom.setLanguage(objectMetadata.getUserMetaDataOf("language"));
+			vom.setDurationInSeconds(Long.parseLong(objectMetadata.getUserMetaDataOf("durationInSeconds")));
 			vom.setUrl(objectMetadata.getUserMetaDataOf("url"));
 			vomList.add(vom);
-		}
+		}*/
+		
+		System.out.println(mapList.toString());
 		return vomList;
 
 

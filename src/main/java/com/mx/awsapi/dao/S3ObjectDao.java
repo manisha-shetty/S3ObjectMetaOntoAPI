@@ -31,7 +31,7 @@ public class S3ObjectDao {
 			PutObjectRequest putObjectRequest = new PutObjectRequest(com.getBucketName()+"/", com.getKeyName(), stream, objectMetadata);
 			PutObjectResult result = s3Client.putObject(putObjectRequest);
 			stream.close();
-			System.out.println("Etag:" + result.getETag() + "-->" + result);
+			System.out.println("Etag:" + result.getETag() + "-->" + result);			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

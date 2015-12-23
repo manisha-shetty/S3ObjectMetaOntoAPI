@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
@@ -28,10 +31,14 @@ import com.mx.awsapi.dao.OntologyDao;
 import com.mx.awsapi.model.S3CustomObjectMetadata;
 import com.mx.awsapi.model.VideoObjectMetadata;
 
+@Component
 public class OntologyService {
 
 	static Logger log = Logger.getLogger(OntologyService.class.getName());
-
+	
+	@Autowired
+	private Properties ontologyKeys;
+	
 	@Autowired
 	private OntologyDao ontologyDao;
 
@@ -97,7 +104,7 @@ public class OntologyService {
 		ind.addProperty(model.getProperty(getNs()+"cache_control"),(com.getCacheControl()==null)?"":com.getCacheControl());
 		ind.addProperty(model.getProperty(getNs()+"content_disposition"),(com.getContentDisposition()==null)?"":com.getContentDisposition());
 		ind.addProperty(model.getProperty(getNs()+"content_encoding"),(com.getContentEncoding()==null)?"":com.getContentEncoding());
-		ind.addLiteral(model.getProperty(getNs()+"content_length"),com.getContentLength());
+		ind.addLiteral(model.getProperty(getNs()+"content_duration"),com.getContentLength());
 		ind.addProperty(model.getProperty(getNs()+"content_md5"),(com.getContentMD5()==null)?"":com.getContentMD5());
 		ind.addProperty(model.getProperty(getNs()+"content_type"),(com.getContentType()==null)?"":com.getContentType());
 		ind.addLiteral(model.getProperty(getNs()+"expiration_time"),(com.getExpirationTime()==null)?"":com.getExpirationTime());
@@ -131,9 +138,13 @@ public class OntologyService {
 		vomInd=addS3CustomObjectMetadata(vom, vomInd);
 
 		vomInd.addProperty(model.getProperty(getNs()+"format"),vom.getFormat());
-		vomInd.addProperty(model.getProperty(getNs()+"caption"),vom.getCaption());
+		vomInd.addProperty(model.getProperty(getNs()+"title"),vom.getTitle());
 		vomInd.addProperty(model.getProperty(getNs()+"language"),vom.getLanguage());
-		vomInd.addLiteral(model.getProperty(getNs()+"length_in_seconds"),vom.getLengthInSeconds());
+		vomInd.addLiteral(model.getProperty(getNs()+"duration_in_seconds"),vom.getDurationInSeconds());	
+		vomInd.addProperty(model.getProperty(getNs()+"creator"), vom.getCreator());
+		vomInd.addProperty(model.getProperty(getNs()+"date_of_creation"),vom.getDateOfCreation().toString());
+		vomInd.addProperty(model.getProperty(getNs()+"subject"), vom.getSubject());
+		vomInd.addProperty(model.getProperty(getNs()+"description"), vom.getDescription());
 		try {
 			stream= new PrintStream(getOwlFilePath());
 		} catch (FileNotFoundException e) {
@@ -144,19 +155,18 @@ public class OntologyService {
 
 	}
 
-	public List<Map<String,String>> searchVideoByLanguage(String language){
-
+	public List<Map<String,String>> searchVideoByMetadata(String key, String value){
 		List<Map<String,String>> mapList = new ArrayList<Map<String,String>>();
 		String queryString =
-				"prefix ns: <"+getNs() +">" +
+				"prefix ns: <"+getNs() +"> " +
 						"prefix vom: <"+getNs() +"VideoObjectMetadata> " +       
 						"prefix rdfs: <" + RDFS.getURI() + "> "           +
 						"prefix owl: <" + OWL.getURI() + "> "             +
 						"select ?key ?bucket where {?i a ns:VideoObjectMetadata ." +
 						"?i ns:key_name ?key ." +
-						"?i ns:bucket_name ?bucket" +
-						"?i ns:language '"+ language +"'}";
-
+						"?i ns:bucket_name ?bucket ." +
+						"?i ns:"+key+" '"+ value +"'}";
+		System.out.println(queryString);
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qe = QueryExecutionFactory.create(query, getModel());
 		com.hp.hpl.jena.query.ResultSet results =  qe.execSelect();
@@ -171,6 +181,12 @@ public class OntologyService {
 		//ResultSetFormatter.out(System.out, results, query);
 		qe.close();
 		return mapList;
+	}
+	
+	public List<Map<String,String>> searchVideoByLanguage(String language){
+		 return searchVideoByMetadata(ontologyKeys.getProperty("vomKey.language"),language);
+				
+		
 	}
 
 }
