@@ -1,23 +1,27 @@
 package com.mx.awsapi.model;
 
+import java.util.Date;
+
 public class AudioObjectMetadata extends S3CustomObjectMetadata{
 
-	private String format;
-	private String caption;
-	private String language;
+	private String album;
+	private String encoder;
+	private String language; //A language of the resource.
 	private long lengthInSeconds;
+	private int trackNumber;
+	private String type;  //The nature or genre of the resource.
 	
-	public String getFormat() {
-		return format;
+	public String getAlbum() {
+		return album;
 	}
-	public void setFormat(String format) {
-		this.format = format;
+	public void setAlbum(String album) {
+		this.album = album;
 	}
-	public String getCaption() {
-		return caption;
+	public String getEncoder() {
+		return encoder;
 	}
-	public void setCaption(String caption) {
-		this.caption = caption;
+	public void setEncoder(String encoder) {
+		this.encoder = encoder;
 	}
 	public String getLanguage() {
 		return language;
@@ -31,7 +35,19 @@ public class AudioObjectMetadata extends S3CustomObjectMetadata{
 	public void setLengthInSeconds(long lengthInSeconds) {
 		this.lengthInSeconds = lengthInSeconds;
 	}
-
+	public int getTrackNumber() {
+		return trackNumber;
+	}
+	public void setTrackNumber(int trackNumber) {
+		this.trackNumber = trackNumber;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	
-
+	
 }
+	

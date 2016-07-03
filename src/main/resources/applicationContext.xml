@@ -39,6 +39,9 @@
 		<property name="ns"
 			value="http://www.semanticweb.org/ontologies/2015/9/S3ObjectMetaOnto.owl#">
 		</property>
+		<property name="dc"
+			value="http://purl.org/dc/elements/1.1/">
+		</property>
 	</bean>
 
 

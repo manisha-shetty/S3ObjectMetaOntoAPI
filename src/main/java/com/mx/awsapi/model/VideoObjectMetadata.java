@@ -1,53 +1,23 @@
 package com.mx.awsapi.model;
 
-import java.util.Date;
-
 public class VideoObjectMetadata extends S3CustomObjectMetadata{
 
-	private String format;
-	private String title;	
-	private String language;
-	private long durationInSeconds;
-	private String creator;
-	private Date dateOfCreation;
-	private String subject;
-	private String description;
+	private String language; //A language of the resource.
+	private long lengthInSeconds;
+	private String subject; //The topic of the resource.
+	private String type; //The nature or genre of the resource.
 	
-	public String getFormat() {
-		return format;
-	}
-	public void setFormat(String format) {
-		this.format = format;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
 	public String getLanguage() {
 		return language;
 	}
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	public long getDurationInSeconds() {
-		return durationInSeconds;
+	public long getLengthInSeconds() {
+		return lengthInSeconds;
 	}
-	public void setDurationInSeconds(long durationInSeconds) {
-		this.durationInSeconds = durationInSeconds;
-	}
-	public String getCreator() {
-		return creator;
-	}
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
-	public Date getDateOfCreation() {
-		return dateOfCreation;
-	}
-	public void setDateOfCreation(Date dateOfCreation) {
-		this.dateOfCreation = dateOfCreation;
+	public void setLengthInSeconds(long lengthInSeconds) {
+		this.lengthInSeconds = lengthInSeconds;
 	}
 	public String getSubject() {
 		return subject;
@@ -55,13 +25,12 @@ public class VideoObjectMetadata extends S3CustomObjectMetadata{
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public String getDescription() {
-		return description;
+	public String getType() {
+		return type;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setType(String type) {
+		this.type = type;
 	}
-
 	
-
+	
 }

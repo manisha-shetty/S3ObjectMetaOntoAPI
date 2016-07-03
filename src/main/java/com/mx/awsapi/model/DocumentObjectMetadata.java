@@ -2,36 +2,28 @@ package com.mx.awsapi.model;
 
 public class DocumentObjectMetadata extends S3CustomObjectMetadata{
 
-	private String format;
-	private String caption;
-	private String language;
-	private long lengthInSeconds;
+	private String language;  //A language of the resource.
+	private String publisher; //An entity responsible for making the resource available.
+	private String bibliographicCitation; //A bibliographic reference for the resource.
 	
-	public String getFormat() {
-		return format;
-	}
-	public void setFormat(String format) {
-		this.format = format;
-	}
-	public String getCaption() {
-		return caption;
-	}
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
 	public String getLanguage() {
 		return language;
 	}
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	public long getLengthInSeconds() {
-		return lengthInSeconds;
+	public String getPublisher() {
+		return publisher;
 	}
-	public void setLengthInSeconds(long lengthInSeconds) {
-		this.lengthInSeconds = lengthInSeconds;
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
 	}
-
+	public String getBibliographicCitation() {
+		return bibliographicCitation;
+	}
+	public void setBibliographicCitation(String bibliographicCitation) {
+		this.bibliographicCitation = bibliographicCitation;
+	}
 	
-
+	
 }

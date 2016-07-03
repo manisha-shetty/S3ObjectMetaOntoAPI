@@ -1,37 +1,59 @@
 package com.mx.awsapi.model;
 
+import java.util.Date;
+
 public class ImageObjectMetadata extends S3CustomObjectMetadata{
 
-	private String format;
-	private String caption;
-	private String language;
-	private long lengthInSeconds;
+	private String colorSpace;
+	private long imageHeight;
+	private long imageWidth;
+	private String location;
+	private String orientation;
+	private long pixels;
+	private String subject;  //The topic of the resource.
 	
-	public String getFormat() {
-		return format;
+	public String getColorSpace() {
+		return colorSpace;
 	}
-	public void setFormat(String format) {
-		this.format = format;
+	public void setColorSpace(String colorSpace) {
+		this.colorSpace = colorSpace;
 	}
-	public String getCaption() {
-		return caption;
+	public long getImageHeight() {
+		return imageHeight;
 	}
-	public void setCaption(String caption) {
-		this.caption = caption;
+	public void setImageHeight(long imageHeight) {
+		this.imageHeight = imageHeight;
 	}
-	public String getLanguage() {
-		return language;
+	public long getImageWidth() {
+		return imageWidth;
 	}
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setImageWidth(long imageWidth) {
+		this.imageWidth = imageWidth;
 	}
-	public long getLengthInSeconds() {
-		return lengthInSeconds;
+	public String getLocation() {
+		return location;
 	}
-	public void setLengthInSeconds(long lengthInSeconds) {
-		this.lengthInSeconds = lengthInSeconds;
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getOrientation() {
+		return orientation;
+	}
+	public void setOrientation(String orientation) {
+		this.orientation = orientation;
+	}
+	public long getPixels() {
+		return pixels;
+	}
+	public void setPixels(long pixels) {
+		this.pixels = pixels;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	
-
 }
